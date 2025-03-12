@@ -1,0 +1,13 @@
+---
+title: "table1"
+format: html
+---
+
+```{r}
+# read in the data/DiabScreening_a.txt file, which uses pipe delimiters
+data <- read.table("data/DiabScreening_a.txt", sep = "|", header = TRUE, fill = TRUE, fileEncoding = "UTF-16LE", stringsAsFactors = FALSE, na.strings = "")
+head(data)
+```
+
+```{r}
+```
