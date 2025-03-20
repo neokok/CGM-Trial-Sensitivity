@@ -12,6 +12,7 @@ library(tableone)
 library(kableExtra)
 ```
 
+## Read in data
 ```{r}
 # read in the data/DiabScreening_a.txt file, which uses pipe delimiters
 data <- read.table("data/DiabScreening_a.txt", sep = "|", header = TRUE, fill = TRUE, fileEncoding = "UTF-16LE", stringsAsFactors = FALSE, na.strings = "")
@@ -40,28 +41,48 @@ physical_data <- physical_data %>%
 # left join ses_data to data using PtID
 data <- left_join(data, ses_data, by = "PtID")
 data <- left_join(data, physical_data, by = "PtID")
-
-data <- data %>%
-  mutate(AgeGroup = ifelse(AgeAtEnrollment >= 18, ">=18", "<18"),
-         EducationLevel = case_when(
-           grepl("^Bach", EducationLevel) ~ "Bachelor's Degree",
-           grepl("^Mast", EducationLevel) ~ "Master's Degree",
-           grepl("^Prof", EducationLevel) ~ "Professional Degree",
-           grepl("^Some", EducationLevel) ~ "Some college but no degree",
-           grepl("^Assoc", EducationLevel) ~ "Associate Degree",
-           grepl("^High", EducationLevel) ~ "High school graduate/diploma/GED",
-           grepl("^Doct", EducationLevel) ~ "Doctorate Degree",
-           TRUE ~ EducationLevel
-         )) %>%
-        # GRoup 10th grade, 9th grade, Associate Degree, Some college but no degree into "Less than Bachelor's degree"
-        mutate(EducationLevel = ifelse(EducationLevel %in% c("10th grade", "9th grade", "Associate Degree", "Some college but no degree", "High school graduate/diploma/GED"), "Less than Bachelor's degree", EducationLevel)) %>%
-        mutate(MeansInsAdmin = case_when(
-          InsModPump == 1 ~ "Pump",
-          InsModInjections == 1 ~ "Injections",
-          TRUE ~ "Other"
-        ))
 ```
 
+## Condense categories for table
+```{r}
+data <- data %>%
+  mutate(
+    AgeGroup = ifelse(AgeAtEnrollment >= 18, ">=18", "<18"),
+    EducationLevel = case_when(
+      grepl("^Bach", EducationLevel) ~ "Bachelor's degree",
+      grepl("^Mast", EducationLevel) ~ "Advanced degree",
+      grepl("^Prof", EducationLevel) ~ "Advanced degree",
+      grepl("^Some", EducationLevel) ~ "Less than bachelor's degree",
+      grepl("^Assoc", EducationLevel) ~ "Less than bachelor's degree",
+      grepl("^High", EducationLevel) ~ "Less than bachelor's degree",
+      grepl("^Doct", EducationLevel) ~ "Advanced degree",
+      TRUE ~ EducationLevel
+    )
+  ) %>%
+  mutate(
+    EducationLevel = ifelse(EducationLevel %in% c("10th grade", "9th grade", 
+                                                  "Associate Degree", 
+                                                  "Some college but no degree", 
+                                                  "High school graduate/diploma/GED"), 
+                            "Less than bachelor's degree", EducationLevel)
+  ) %>%
+  mutate(
+    MeansInsAdmin = case_when(
+      InsModPump == 1 ~ "Pump",
+      InsModInjections == 1 ~ "Injections",
+      TRUE ~ "Other"
+    ),
+    AnnualIncome = case_when(
+      AnnualIncome %in% c("$100,000 to less than $200,000", "$200,000 or more") ~ "≥100,000",
+      AnnualIncome == "$35,000 to less than $50,000" ~ "<50,000",
+      AnnualIncome == "$50,000 to less than $75,000" ~ "50,000-100,000",
+      TRUE ~ AnnualIncome
+    )
+  )
+
+```
+
+### Write table
 ```{r}
 # Define variables for Table 1
 vars <- c("AgeAtEnrollment", "AgeGroup", "Gender", "Race", "Ethnicity", "BMI", "AnnualIncome", "EducationLevel", "CGMUseStat", "MeansInsAdmin")
@@ -86,6 +107,7 @@ table1_html
 #save_kable(table1_html, "table1.html")
 ```
 
+### Plots
 ```{r}
 ggplot(data, aes(x = AgeAtEnrollment)) +
   geom_histogram(binwidth = 5, fill = "skyblue", color = "black") +
