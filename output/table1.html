@@ -124,7 +124,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co"># mutate BMI using weight (lbs) and height (cm) in physical data</span></span>
 <span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>physical_data <span class="ot">&lt;-</span> physical_data <span class="sc">%&gt;%</span></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">BMI =</span> (Weight <span class="sc">/</span> <span class="fl">2.20462</span>) <span class="sc">/</span> ((Height) <span class="sc">^</span> <span class="dv">2</span>))</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">BMI =</span> (Weight <span class="sc">/</span> <span class="fl">2.20462</span>) <span class="sc">/</span> ((Height <span class="sc">/</span> <span class="dv">100</span>) <span class="sc">^</span> <span class="dv">2</span>))</span>
 <span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="co"># left join ses_data to data using PtID</span></span>
 <span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">left_join</span>(data, ses_data, <span class="at">by =</span> <span class="st">"PtID"</span>)</span>
@@ -143,20 +143,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>           <span class="cn">TRUE</span> <span class="sc">~</span> EducationLevel</span>
 <span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>         )) <span class="sc">%&gt;%</span></span>
 <span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>        <span class="co"># GRoup 10th grade, 9th grade, Associate Degree, Some college but no degree into "Less than Bachelor's degree"</span></span>
-<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mutate</span>(<span class="at">EducationLevel =</span> <span class="fu">ifelse</span>(EducationLevel <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"10th grade"</span>, <span class="st">"9th grade"</span>, <span class="st">"Associate Degree"</span>, <span class="st">"Some college but no degree"</span>), <span class="st">"Less than Bachelor's degree"</span>, EducationLevel))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mutate</span>(<span class="at">EducationLevel =</span> <span class="fu">ifelse</span>(EducationLevel <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"10th grade"</span>, <span class="st">"9th grade"</span>, <span class="st">"Associate Degree"</span>, <span class="st">"Some college but no degree"</span>, <span class="st">"High school graduate/diploma/GED"</span>), <span class="st">"Less than Bachelor's degree"</span>, EducationLevel)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>        <span class="fu">mutate</span>(<span class="at">MeansInsAdmin =</span> <span class="fu">case_when</span>(</span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>          InsModPump <span class="sc">==</span> <span class="dv">1</span> <span class="sc">~</span> <span class="st">"Pump"</span>,</span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>          InsModInjections <span class="sc">==</span> <span class="dv">1</span> <span class="sc">~</span> <span class="st">"Injections"</span>,</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>          <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"Other"</span></span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>        ))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define variables for Table 1</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>vars <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"AgeAtEnrollment"</span>, <span class="st">"AgeGroup"</span>, <span class="st">"Gender"</span>, <span class="st">"Race"</span>, <span class="st">"Ethnicity"</span>, <span class="st">"BMI"</span>, <span class="st">"AnnualIncome"</span>, <span class="st">"EducationLevel"</span>, <span class="st">"CGMUseStat"</span>, <span class="st">"SHMostRecent"</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>vars <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"AgeAtEnrollment"</span>, <span class="st">"AgeGroup"</span>, <span class="st">"Gender"</span>, <span class="st">"Race"</span>, <span class="st">"Ethnicity"</span>, <span class="st">"BMI"</span>, <span class="st">"AnnualIncome"</span>, <span class="st">"EducationLevel"</span>, <span class="st">"CGMUseStat"</span>, <span class="st">"MeansInsAdmin"</span>)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Categorical variables</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>factorVars <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Gender"</span>, <span class="st">"Race"</span>, <span class="st">"Ethnicity"</span>, <span class="st">"AnnualIncome"</span>, <span class="st">"EducationLevel"</span>, <span class="st">"CGMUseStat"</span>, <span class="st">"SHMostRecent"</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>factorVars <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Gender"</span>, <span class="st">"Race"</span>, <span class="st">"Ethnicity"</span>, <span class="st">"AnnualIncome"</span>, <span class="st">"EducationLevel"</span>, <span class="st">"CGMUseStat"</span>, <span class="st">"MeansInsAdmin"</span>)</span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Create Table 1, strata = group (control vs )</span></span>
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>table1 <span class="ot">&lt;-</span> <span class="fu">CreateTableOne</span>(<span class="at">vars =</span> vars, <span class="at">data =</span> data, <span class="at">factorVars =</span> factorVars)</span>
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert Table 1 to a dataframe</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>table1_df <span class="ot">&lt;-</span> <span class="fu">print</span>(table1, <span class="at">showAllLevels =</span> <span class="cn">TRUE</span>, <span class="at">formatOptions =</span> <span class="fu">list</span>(<span class="at">big.mark =</span> <span class="st">","</span>), <span class="at">printToggle =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>table1_df <span class="ot">&lt;-</span> <span class="fu">print</span>(table1, <span class="at">strata=</span><span class="st">"AgeGroup"</span>, <span class="at">showAllLevels =</span> <span class="cn">TRUE</span>, <span class="at">formatOptions =</span> <span class="fu">list</span>(<span class="at">big.mark =</span> <span class="st">","</span>), <span class="at">printToggle =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Create HTML table using kableExtra</span></span>
 <span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>table1_html <span class="ot">&lt;-</span> table1_df <span class="sc">%&gt;%</span></span>
@@ -248,7 +253,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="odd">
 <td style="text-align: left;">BMI (mean (SD))</td>
 <td style="text-align: left;"></td>
-<td style="text-align: left;">0.00 (0.00)</td>
+<td style="text-align: left;">26.29 (38.30)</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">AnnualIncome (%)</td>
@@ -297,73 +302,43 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 <tr class="odd">
 <td style="text-align: left;"></td>
-<td style="text-align: left;">High school graduate/diploma/GED</td>
-<td style="text-align: left;">4 ( 4.7)</td>
+<td style="text-align: left;">Less than Bachelor's degree</td>
+<td style="text-align: left;">15 (17.6)</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;"></td>
-<td style="text-align: left;">Less than Bachelor's degree</td>
-<td style="text-align: left;">11 (12.9)</td>
-</tr>
-<tr class="odd">
 <td style="text-align: left;"></td>
 <td style="text-align: left;">Master's Degree</td>
 <td style="text-align: left;">25 (29.4)</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;"></td>
 <td style="text-align: left;">Professional Degree</td>
 <td style="text-align: left;">7 ( 8.2)</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">CGMUseStat (%)</td>
 <td style="text-align: left;">Current</td>
 <td style="text-align: left;">119 (70.0)</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;"></td>
 <td style="text-align: left;">In past, but not current</td>
 <td style="text-align: left;">37 (21.8)</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;"></td>
 <td style="text-align: left;">Never</td>
 <td style="text-align: left;">14 ( 8.2)</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">SHMostRecent (%)</td>
-<td style="text-align: left;">&lt; 3 months ago</td>
-<td style="text-align: left;">2 ( 1.2)</td>
-</tr>
 <tr class="odd">
-<td style="text-align: left;"></td>
-<td style="text-align: left;">&gt;=10 years ago</td>
-<td style="text-align: left;">28 (16.5)</td>
+<td style="text-align: left;">MeansInsAdmin (%)</td>
+<td style="text-align: left;">Injections</td>
+<td style="text-align: left;">35 (20.6)</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"></td>
-<td style="text-align: left;">1-&lt;5 years ago</td>
-<td style="text-align: left;">14 ( 8.2)</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"></td>
-<td style="text-align: left;">3-&lt;6 months ago</td>
-<td style="text-align: left;">1 ( 0.6)</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"></td>
-<td style="text-align: left;">5-&lt;10 years ago</td>
-<td style="text-align: left;">9 ( 5.3)</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"></td>
-<td style="text-align: left;">6-&lt;12 months ago</td>
-<td style="text-align: left;">4 ( 2.4)</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;"></td>
-<td style="text-align: left;">Never</td>
-<td style="text-align: left;">112 (65.9)</td>
+<td style="text-align: left;">Pump</td>
+<td style="text-align: left;">135 (79.4)</td>
 </tr>
 </tbody>
 </table>

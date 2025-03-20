@@ -35,7 +35,7 @@ physical_data <- read.table("data/DiabPhysExam_a.txt", sep = "|", header = TRUE,
 
 # mutate BMI using weight (lbs) and height (cm) in physical data
 physical_data <- physical_data %>%
-  mutate(BMI = (Weight / 2.20462) / ((Height) ^ 2))
+  mutate(BMI = (Weight / 2.20462) / ((Height / 100) ^ 2))
 
 # left join ses_data to data using PtID
 data <- left_join(data, ses_data, by = "PtID")
