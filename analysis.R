@@ -27,12 +27,12 @@ trial_metrics <- function(data, window){
 
   data <- data |> filter(time >= date(randomization) & time <= date(randomization) + days(window))
   
-  metrics <- cbind(in_range_percent(trial_data,target_ranges = list(c(70,180))),
-        cv_glu(trial_data)[,2],
-        episode_calculation(trial_data) |> 
+  metrics <- cbind(in_range_percent(data, target_ranges = list(c(70,180))),
+        cv_glu(data)[,2],
+        episode_calculation(data) |> 
           filter(type == "hypo", level == "lv1") |> 
           select(total_episodes),
-        window = rep(windows[i], length(unique(trial_data$id))))
+        window = rep(windows[i], length(unique(data$id))))
   
   print(paste0("Window: ", window, " days"))
   
