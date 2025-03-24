@@ -36,5 +36,5 @@ effect_over_time = ggplot(treatment_effect, aes(x = length, y = estimate, color 
 
 
 # Save out figures
-ggsave("figures/values_over_time.jpeg", values_over_time, width = 15, height = 8, dpi = 1200)
-ggsave("figures/effect_over_time.jpeg", effect_over_time, width = 15, height = 8, dpi = 1200)
+ggsave("output/Figure_1.jpeg", values_over_time, width = 15, height = 8, dpi = 1200)
+ggsave("output/Figure_2.jpeg", effect_over_time, width = 15, height = 8, dpi = 1200)
