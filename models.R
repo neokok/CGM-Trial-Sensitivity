@@ -82,6 +82,24 @@ anova_results = data.frame(
   stringsAsFactors = FALSE
 )
 
+interaction_results = data.frame(
+  Metric = character(5),
+  Window = numeric(5),
+  Estimate = numeric(5),
+  LB = numeric(5),
+  UB = numeric(5),
+  p = numeric(5)
+)
+
+interaction_results = data.frame(
+  Metric = character(),
+  Window = numeric(),
+  Estimate = numeric(),
+  LB = numeric(),
+  UB = numeric(),
+  p = numeric()
+)
+
 # Loop through each metric to save out ANOVA and model output
 for(metric in colnames(metrics)[3:6]){
 
@@ -89,6 +107,40 @@ for(metric in colnames(metrics)[3:6]){
   model = (full_model(data, metric))[[1]]
   model_reduced = (full_model(data, metric))[[2]]
 
+  interaction = data.frame(
+    Metric = character(5),
+    Window = numeric(5),
+    Estimate = numeric(5),
+    LB = numeric(5),
+    UB = numeric(5),
+    p = numeric(5)
+  )
+
+  # Save interaction estimates
+  interaction$Metric = metric
+  interaction$Window = c(90, 60, 30, 14, 7)
+  interaction$Estimate[1] = summary(model)$coef[12]
+  interaction$Estimate[2] = summary(model)$coef[13]
+  interaction$Estimate[3] = summary(model)$coef[14]
+  interaction$Estimate[4] = summary(model)$coef[15]
+  interaction$Estimate[5] = summary(model)$coef[16]
+  interaction$LB[1] = summary(model)$coef[12] - 1.96 * summary(model)$coef[28]
+  interaction$LB[2] = summary(model)$coef[13] - 1.96 * summary(model)$coef[29]
+  interaction$LB[3] = summary(model)$coef[14] - 1.96 * summary(model)$coef[30]
+  interaction$LB[4] = summary(model)$coef[15] - 1.96 * summary(model)$coef[31]
+  interaction$LB[5] = summary(model)$coef[16] - 1.96 * summary(model)$coef[32]
+  interaction$UB[1] = summary(model)$coef[12] + 1.96 * summary(model)$coef[28]
+  interaction$UB[2] = summary(model)$coef[13] + 1.96 * summary(model)$coef[29]
+  interaction$UB[3] = summary(model)$coef[14] + 1.96 * summary(model)$coef[30]
+  interaction$UB[4] = summary(model)$coef[15] + 1.96 * summary(model)$coef[31]
+  interaction$UB[5] = summary(model)$coef[16] + 1.96 * summary(model)$coef[32]
+  interaction$p[1] = summary(model)$coef[76]
+  interaction$p[2] = summary(model)$coef[77]
+  interaction$p[3] = summary(model)$coef[78]
+  interaction$p[4] = summary(model)$coef[79]
+  interaction$p[5] = summary(model)$coef[80]
+
+  interaction_results = rbind(interaction_results, interaction)
 
   # Compute the ANOVA comparing the reduced and full models
   anova_res = anova(model_reduced, model)
@@ -112,3 +164,9 @@ for(metric in colnames(metrics)[3:6]){
 
 # Save out combined ANOVA table
 tab_df(anova_results, file = "output/anova_results_summary.html", digits = 6)
+
+write_csv(interaction_results, "output/interaction_estimates.csv")
+
+
+
+
