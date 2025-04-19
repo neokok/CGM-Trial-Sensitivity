@@ -16,6 +16,14 @@ treatment_effect = read_csv("data/treatment_effect.csv") %>%
          )) |> 
   rename(Metric = metric)
 
+interaction_estimates = read_csv("output/interaction_estimates.csv") %>%
+  mutate(Window = factor(Window, levels = c(7, 14, 30, 60, 90, 182)),
+         Metric = case_when(
+           Metric == "in_range_70_180" ~ "Time in Range",
+           Metric == "CV" ~ "Coefficient of Variation",
+           Metric == "below_70" ~ "Time Below 70",
+           Metric == "episode_rate" ~ "Episode Rate"
+         ))
 
 # Figure 1 - Metric Values Over Time
 
@@ -49,9 +57,17 @@ effect_over_time = ggplot(treatment_effect, aes(x = length, y = estimate, color 
   facet_wrap(~ Metric, scales = "free_y") + 
   theme(legend.position = "none") 
 
-
+# Figure 3 - Interaction Estimates
+interaction_effect = interaction_estimates %>%
+  ggplot(aes(x = Window, y = Estimate, color = Metric)) +
+  geom_point() +
+  geom_errorbar(aes(ymin = LB, ymax = UB), width = 0.2) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
+  facet_wrap(~ Metric, scales = "free_y") + 
+  theme(legend.position = "none")
 
 
 # Save out figures
 ggsave("output/Figure_1.jpeg", values_over_time, width = 15, height = 8, dpi = 1200)
 ggsave("output/Figure_2.jpeg", effect_over_time, width = 15, height = 8, dpi = 1200)
+ggsave("output/Figure_3.jpeg", interaction_effect, width = 15, height = 8, dpi = 1200)
