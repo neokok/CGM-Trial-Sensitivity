@@ -41,9 +41,9 @@ longer$window = factor(longer$window, levels = c("baseline", 7, 14, 30, 60, 90, 
 values_over_time = ggplot(longer, aes(x = window, y = value, color = Treatment)) +
   geom_boxplot() +
   labs(x = "Window Length",
-       y = "Estimate",
-       title = "Metric Distributions") +
+       y = "Estimate") +
   facet_wrap(~ metric, scales = "free_y") + 
+  scale_color_manual(values = c("#E69F00", "#56B4E9")) +
   theme(plot.title = element_text(hjust = 0.5))
 
 
@@ -52,9 +52,10 @@ effect_over_time = ggplot(treatment_effect, aes(x = length, y = estimate, color 
   geom_point() +
   geom_errorbar(aes(ymin = estimate - se, ymax = estimate + se), width = 0.2) +
   labs(x = "Window Length",
-       y = "Estimate",
-       title = "Treatment Effect Estimates by Metric and Window Length") +
+       y = "Estimate") +
   facet_wrap(~ Metric, scales = "free_y") + 
+  scale_color_manual(values = c("#E69F00", "#56B4E9", "#009E73", "#F0E442")) +
+  theme_bw() + 
   theme(legend.position = "none") 
 
 # Figure 3 - Interaction Estimates
@@ -62,8 +63,12 @@ interaction_effect = interaction_estimates %>%
   ggplot(aes(x = Window, y = Estimate, color = Metric)) +
   geom_point() +
   geom_errorbar(aes(ymin = LB, ymax = UB), width = 0.2) +
+  labs(x = "Window Length",
+       y = "Estimate") +
   geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
   facet_wrap(~ Metric, scales = "free_y") + 
+  scale_color_manual(values = c("#E69F00", "#56B4E9", "#009E73", "#F0E442")) +
+  theme_bw() + 
   theme(legend.position = "none")
 
 
