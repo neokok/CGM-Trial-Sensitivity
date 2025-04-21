@@ -43,7 +43,7 @@ values_over_time = ggplot(longer, aes(x = window, y = value, color = Treatment))
   labs(x = "Window Length",
        y = "Estimate") +
   facet_wrap(~ metric, scales = "free_y") + 
-  scale_color_manual(values = c("#E69F00", "#56B4E9")) +
+  scale_color_manual(values = c("#3498DB", "#9B59B6")) +
   theme(plot.title = element_text(hjust = 0.5))
 
 
@@ -54,7 +54,7 @@ effect_over_time = ggplot(treatment_effect, aes(x = length, y = estimate, color 
   labs(x = "Window Length",
        y = "Estimate") +
   facet_wrap(~ Metric, scales = "free_y") + 
-  scale_color_manual(values = c("#E69F00", "#56B4E9", "#009E73", "#F0E442")) +
+  scale_color_manual(values = c("#1ABC9C", "#3498DB", "#E74C3C", "#9B59B6")) +
   theme_bw() + 
   theme(legend.position = "none") 
 
@@ -67,7 +67,7 @@ interaction_effect = interaction_estimates %>%
        y = "Estimate") +
   geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
   facet_wrap(~ Metric, scales = "free_y") + 
-  scale_color_manual(values = c("#E69F00", "#56B4E9", "#009E73", "#F0E442")) +
+  scale_color_manual(values = c("#1ABC9C", "#3498DB", "#E74C3C", "#9B59B6")) +
   theme_bw() + 
   theme(legend.position = "none")
 
