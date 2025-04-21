@@ -2,7 +2,7 @@ library(tidyverse)
 
 # Read in data
 data = read_csv("data/metrics_all.csv") %>%
-  select(id, window, in_range_70_180, CV, below_70, tot_hyper_ep, site, trt) %>%
+  select(id, window, in_range_70_180, CV, below_70, episode_rate, site, trt) %>%
   mutate(trt = factor(trt, levels = c("SAP", "CLC")),
          trt = recode(trt, "SAP" = "Control"))
 
@@ -31,10 +31,10 @@ longer = data |>
   rename("Time in Range" = in_range_70_180,
          "Coefficient of Variation" = CV,
          "Time Below 70" = below_70,
-         "Total Hyper Epi" = tot_hyper_ep,
+         "Episode Rate" = episode_rate,
          Treatment = trt) |> 
   pivot_longer(c("Time in Range", "Coefficient of Variation",
-                 "Time Below 70", "Total Hyper Epi"),
+                 "Time Below 70", "Episode Rate"),
                                                        names_to = "metric", values_to = "value")
 longer$window = factor(longer$window, levels = c("baseline", 7, 14, 30, 60, 90, 182))
 
