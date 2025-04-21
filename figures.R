@@ -44,6 +44,7 @@ values_over_time = ggplot(longer, aes(x = window, y = value, color = Treatment))
        y = "Estimate") +
   facet_wrap(~ metric, scales = "free_y") + 
   scale_color_manual(values = c("#3498DB", "#9B59B6")) +
+  theme_bw()+
   theme(plot.title = element_text(hjust = 0.5))
 
 
