@@ -47,7 +47,7 @@ data <- left_join(data, physical_data, by = "PtID")
 ```{r}
 data <- data %>%
   mutate(
-    AgeGroup = ifelse(AgeAtEnrollment >= 18, ">=18", "<18"),
+    `Age Group` = ifelse(AgeAtEnrollment >= 18, ">=18", "<18"),
     EducationLevel = case_when(
       grepl("^Bach", EducationLevel) ~ "Bachelor's degree",
       grepl("^Mast", EducationLevel) ~ "Advanced degree",
@@ -60,35 +60,37 @@ data <- data %>%
     )
   ) %>%
   mutate(
-    EducationLevel = ifelse(EducationLevel %in% c("10th grade", "9th grade", 
+    `Education Level` = ifelse(EducationLevel %in% c("10th grade", "9th grade", 
                                                   "Associate Degree", 
                                                   "Some college but no degree", 
                                                   "High school graduate/diploma/GED"), 
                             "Less than bachelor's degree", EducationLevel)
   ) %>%
   mutate(
-    MeansInsAdmin = case_when(
+    `Administration Type` = case_when(
       InsModPump == 1 ~ "Pump",
       InsModInjections == 1 ~ "Injections",
       TRUE ~ "Other"
     ),
-    AnnualIncome = case_when(
+    `Annual Income` = case_when(
       AnnualIncome %in% c("$100,000 to less than $200,000", "$200,000 or more") ~ "≥100,000",
       AnnualIncome == "$35,000 to less than $50,000" ~ "<50,000",
       AnnualIncome == "$50,000 to less than $75,000" ~ "50,000-100,000",
       TRUE ~ AnnualIncome
     )
-  )
+  ) |> 
+  rename(`Previous CGM Use` = CGMUseStat,
+         Age = AgeAtEnrollment)
 
 ```
 
 ### Write table
 ```{r}
 # Define variables for Table 1
-vars <- c("AgeAtEnrollment", "AgeGroup", "Gender", "Race", "Ethnicity", "BMI", "AnnualIncome", "EducationLevel", "CGMUseStat", "MeansInsAdmin")
+vars <- c("Age", "Age Group", "Gender", "Race", "Ethnicity", "BMI", "Annual Income", "Education Level", "Previous CGM Use", "Administration Type")
 
 # Categorical variables
-factorVars <- c("Gender", "Race", "Ethnicity", "AnnualIncome", "EducationLevel", "CGMUseStat", "MeansInsAdmin")
+factorVars <- c("Gender", "Race", "Ethnicity", "Annual Income", "Education Level", "Previous CGM Use", "Administration Type")
 
 # Create Table 1, strata = group (control vs )
 table1 <- CreateTableOne(vars = vars, data = data, factorVars = factorVars)
@@ -109,7 +111,7 @@ table1_html
 
 ### Plots
 ```{r}
-ggplot(data, aes(x = AgeAtEnrollment)) +
+ggplot(data, aes(x = Age)) +
   geom_histogram(binwidth = 5, fill = "skyblue", color = "black") +
   labs(title = "Age Distribution of Participants", x = "Age", y = "Frequency") +
   theme_stata()
@@ -129,3 +131,34 @@ ggplot(race_proportions, aes(x = reorder(Race, -Proportion), y = Proportion)) +
   theme(axis.text.y = element_text(angle = 0, hjust = 1))
 
 ```
+
+
+```{r}
+# report table 1
+library(table1)
+
+trt <- read.delim("data/PtRoster_a.txt", sep = "|", header = TRUE,
+                  stringsAsFactors = FALSE, fileEncoding = "UTF-16LE", na.strings = "")
+
+
+
+table_data <- data |> mutate(Race = case_when(
+  Race == "More than one race" ~ "Other",
+  Race == "Native Hawaiian/Other Pacific Islander" ~ "Other",
+  Race == "Unknown/not reported" ~ "Other",
+  TRUE ~ Race),
+  `Annual Income` = case_when(
+    `Annual Income` == "Does not wish to provide" ~ "Missing",
+    `Annual Income` == "Unknown" ~ "Missing")) |> 
+  left_join(trt |> select(PtID, trtGroup), by = "PtID") |> 
+  filter(!PtID %in% c(84, 33))
+
+table1::table1(~ Age + `Age Group` + Gender + Race + Ethnicity + 
+                 BMI + `Annual Income` + `Education Level` + 
+                 `Previous CGM Use` + 
+                 `Administration Type` | trtGroup,
+               data = table_data,
+               render.continuous = c("Mean (sd)"))
+
+```
+

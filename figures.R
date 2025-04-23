@@ -41,7 +41,7 @@ longer$window = factor(longer$window, levels = c("baseline", 7, 14, 30, 60, 90, 
 values_over_time = ggplot(longer, aes(x = window, y = value, color = Treatment)) +
   geom_boxplot() +
   labs(x = "Window Length",
-       y = "Estimate") +
+       y = "Measure") +
   facet_wrap(~ metric, scales = "free_y") + 
   scale_color_manual(values = c("#3498DB", "#9B59B6")) +
   theme_bw()+
@@ -77,3 +77,4 @@ interaction_effect = interaction_estimates %>%
 ggsave("output/Figure_1.jpeg", values_over_time, width = 15, height = 8, dpi = 1200)
 ggsave("output/Figure_2.jpeg", effect_over_time, width = 15, height = 8, dpi = 1200)
 ggsave("output/Figure_3.jpeg", interaction_effect, width = 15, height = 8, dpi = 1200)
+
