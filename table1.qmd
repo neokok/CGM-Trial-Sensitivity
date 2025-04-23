@@ -149,12 +149,14 @@ table_data <- data |> mutate(Race = case_when(
   TRUE ~ Race),
   `Annual Income` = case_when(
     `Annual Income` == "Does not wish to provide" ~ "Missing",
-    `Annual Income` == "Unknown" ~ "Missing")) |> 
+    `Annual Income` == "Unknown" ~ "Missing",
+    `Annual Income` == "Missing" ~ "Missing",
+    TRUE ~ `Annual Income`)) |> 
   left_join(trt |> select(PtID, trtGroup), by = "PtID") |> 
   filter(!PtID %in% c(84, 33))
 
-table1::table1(~ Age + `Age Group` + Gender + Race + Ethnicity + 
-                 BMI + `Annual Income` + `Education Level` + 
+table1::table1(~ Age + `Age Group` + BMI +
+                 Gender + Race + Ethnicity + 
                  `Previous CGM Use` + 
                  `Administration Type` | trtGroup,
                data = table_data,
