@@ -7,11 +7,32 @@ editor: visual
 
 ## Abstract
 
+Continuous glucose monitoring (CGM) has transformed the management of type 1 diabetes by measuring high-resolution glucose data in real time. While CGM-derived metrics such as time in range are increasingly used in clinical trials, the optimal duration of follow-up needed to detect treatment effects remains unclear. This study examined whether shorter follow-up periods can yield results comparable to the standard six-month duration used in a landmark randomized trial of a closed-loop insulin delivery system.
+
+We conducted a secondary analysis of CGM data from Brown et al. (2019), evaluating TIR and other glucose metrics across multiple follow-up windows (7 to 90 days). Linear mixed-effects models were used to estimate treatment effects and assess whether results from shorter durations differed significantly from the full trial period.
+
+Findings showed that treatment effect estimates for TIR, time below range, and hyperglycemic episode rate remained consistent across follow-up windows ≥14 days. Only the 7-day window for coefficient of variation differed significantly. These results suggest that, in trials of fast-acting interventions like closed-loop systems, shorter follow-up periods may be sufficient to detect treatment effects, potentially reducing trial cost and complexity without compromising analytic validity.
+
 ## Introduction
+
+Type 1 diabetes is a chronic autoimmune disease in which the body's immune system destroys insulin-producing cells in the pancreas. Thus, individuals with this condition lack sufficient amounts of insulin, a hormone that facilitates the transfer of blood glucose into cells where it can be used for energy. The result is abnormal, often higher levels of glucose in the blood, which, if left unmanaged, can lead to serious complications over time. These complications include cardiovascular disease, nerve damage (neuropathy), kidney failure (nephropathy), vision loss (retinopathy), and poor wound healing. Effective management of type 1 diabetes requires interventions to maintain glycemic control, as well as careful monitoring of blood glucose levels to reduce the risk of long-term health issues.
+
+Continuous glucose monitoring (CGM) has become a valuable tool for the management of Type I diabetes and diabetes in general, providing continuous, real-time glucose measurements from interstitial fluid. The introduction of CGM devices has advanced diabetes management by facilitating improved glycemic control and reducing the frequency of hypo- and hyperglycemic events (Klupa et al). While diabetes studies have historically used the Hemoglobin A1c (HbA1c) test as an outcome measure of blood sugar level, the increasing use of CGMs has enabled clinical trials to examine other outcomes such as time in range, the percentage of overall time in which glucose measurements stayed within a predetermined healthy range of glucose levels. These CGM-derived metrics offer a more granular measure of glucose levels compared to A1c, for example, which represents a 3-month average. These metrics, typically calculated using a minimum of fourteen days of CGM data (Bergenstal 2018), are increasingly widely used in clinical practice and research to assess the effectiveness of diabetes interventions.
+
+However, the appropriate follow-up period for these measures has not been examined. Longer follow-up periods may provide data on the sustained effectiveness and stability of glucose control interventions, but they incur greater costs, greater logistical complexity, and a higher risk of participant attrition. Conversely, shorter follow-up times may reduce participant burden, trial complexity, and overall cost, but the validity of outcomes derived from shorter observation periods is uncertain. There is some evidence that 14 days of CGM data can predict up to 3 months (Bergenstal 2018). Determining whether shorter durations of follow-up are sufficient to yield reliable and sensitive clinical endpoints is potentially important for improving the efficiency of future clinical trials in CGM research.
+
+This project aimed to evaluate whether shorter follow-up periods in CGM-based clinical trials can yield results comparable to those obtained from standard, longer-duration follow-up. To investigate this, we performed a secondary analysis of publicly available data from a landmark clinical trial conducted by Brown et al. (2019), published in the New England Journal of Medicine. This trial examined the efficacy of a closed-loop insulin delivery system, the Medtronic MiniMed 670G, in improving glucose control among individuals with Type 1 Diabetes. A closed-loop system is a kind of device that combines CGM with an automated insulin delivery system of some kind, so that real-time glucose measurements inform the automatic delivery of insulin, minimizing user burden.
+
+Specifically, the goal of this project was to compare the sensitivity and consistency of clinical endpoints measured by CGM calculated at shorter follow-up durations (e.g., 2 weeks, 1 month) against the full 6-month period used in the original trial. By addressing the scientific question of whether CGM clinical trial endpoints are sensitive to differing lengths of follow-up after an intervention, this project will provide insight into optimal clinical trial design.
+
 
 ## Methods
 
+
+
 ## Results
+
+  Summary statistics of demographic distribution reveal a relatively balanced composition of individuals randomized to treatment and control groups, as shown in Table 1. 
 
 ::: {.center}
 ![](docs/table1.png){width=4in}
@@ -20,11 +41,22 @@ editor: visual
 *Table 1*: Demographic characteristics of trial participants, stratified by treatment group, where SAP represents the sensor augmented pump control group, and CLC represents the closed loop system treatment group. Administration type represents the personal treatment method preceding the study.
 :::
 
+
+  Visual comparison of baseline metric distributions with those obtained from all shortened follow-up windows and the original follow-up window across endpoints suggest a similar treatment effect estimate across shortened windows, and similar treatment effect compared to the initial full length follow-up period (Figure 1). There appears to be a consistent treatment effect difference across windows and endpoints, and consistent distribution of control group metrics across windows and endpoints. Closed loop system treatment appears to increase time in range, and decrease time below range, hyperglycemic episode rate, and coefficient variation, all of which indicate an improvement in diabetes management. 
+
+
 ::: {.right}
 ![](docs/Figure_1.png){width=6in}
 
 *Figure 1*: Metric distribution at baseline and with various intervention follow-up windows. Distributions of treatment and control group metrics are represented by purple and blue boxplots, respectively. Window length is in days.
 :::
+
+
+  Replication of original trial results using mixed effects modeling with the full, 6-month follow-up period resulted in similar treatment effect estimates across endpoints. Accounting for repeated measures from the same individual and interaction between shortened follow-up window and treatment group, and adjusting for the same covariates as the original analysis, resulted in consistent findings across metrics (Figure 2).
+  
+  For our primary endpoint, time in range, we found there was not a significant difference in estimated treatment effect between shorter follow-up windows and the full length follow-up period, across window lengths 7 days to 90 days, indicating a similar treatment effect is captured within 7 days and 6 months. The same pattern was observed for both time below range and episode rate, which were log transformed and represent a multiplicative treatment effect. However, for coefficient of variation, we observed a significantly different treatment effect in the 7-day follow-up window compared to the full length period, suggesting the treatment effect is exaggerated in the shortest follow-up period. For all other follow-up periods greater than or equal to 14 days in length, there was no significant difference in treatment effect from the full length follow-up period.
+
+
 
 :::{.center}
 ![](docs/Figure_2.png){width=6in}
@@ -32,7 +64,27 @@ editor: visual
 
 :::
 
+  Likelihood ratio tests to assess the addition of a treatment group and window length interaction revealed a non-significant finding for TIR (𝛘25 = 1.09, p = 0.95), CV (𝛘25  = 7.60, p = 0.18), Time below range (𝛘25  = 3.68, p =  0.60), and hyperglycemic episode rate (𝛘25  = 1.75, p = 0.88)
+
 ## Discussion
+
+In this study, we investigated the potential for shortening the intervention follow-up period in continuous glucose monitor trials, using the experiment from Brown et al. 2019 as an example. We discovered that across CGM metric endpoints, shortened follow-up intervals resulted in similar estimated treatment effects with linear mixed effects modeling. This may indicate that, for the sake of treatment estimation, a full 6-month follow-up period may not be necessary to capture the treatment effect and diabetes management improvement associated with using a closed-loop system.
+
+The exception to this finding was the 7-day follow-up period for coefficient of variation, which we found to have a significantly lower CV compared to the full length, 6-month, study period treatment effect. This may be due to the small sample size associated with 7 days of data, as CV is a function of the mean and will thus provide a better estimate of diabetes management with more observations. Notably, this finding does not remain statistically after multiple comparison adjustments.
+
+  While treatment effects may be captured in as few as 7 to 14 days in this study, a shorter follow-up period may not be sufficient to identify or observe adverse events or safety concerns associated with treatment. In addition, this finding is unlikely to hold in settings where the treatment effect is delayed or takes time to present itself. In the case of a closed-loop system, it makes sense to see an immediate effect, as glucose management decision-making is modified immediately after the beginning of the trial. However, in the hypothetical case of a prescription medicine or exercise regimen intervention, it may be reasonable to expect a delayed treatment effect.
+  
+  In light of these considerations, we recommend only shortening clinical trial length in specific cases, where treatment is fast acting and treatment safety concerns are minimal. This limits the generalizability of our result. One potential adaptation to address these concerns could be a flexible study design using intermediate endpoints, where trial length is adapted on an individual basis according to observed treatment effect or adverse events, allowing for early stopping. Based on our results, it may be wise to explore additional short follow-up periods that align with practical considerations, such as the 10-14-day lifetime of commonly used CGM sensors. This area represents a promising direction for study, which may allow CGM trials to reduce per-person cost and increase scale, while ensuring quality findings.
+
+## Acknowledgement
+
+  The source of the data is the JAEB Center for Health Research. The analyses, content, and conclusions presented herein are solely the responsibility of the authors and have not been reviewed or approved by the JAEB Center for Health Research.
+
+## References
+
+Bergenstal RM. Understanding Continuous Glucose Monitoring Data. In: Role of Continuous Glucose Monitoring in Diabetes Treatment. ADA Clinical Compendia Series. American Diabetes Association; 2018. Accessed April 24, 2025. http://www.ncbi.nlm.nih.gov/books/NBK538967/
+
+Klupa T, Czupryniak L, Dzida G, et al. Expanding the Role of Continuous Glucose Monitoring in Modern Diabetes Care Beyond Type 1 Disease. Diabetes Ther. 2023;14(8):1241-1266. doi:10.1007/s13300-023-01431-3
 
 ## Appendix
 
