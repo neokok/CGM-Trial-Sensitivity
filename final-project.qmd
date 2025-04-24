@@ -5,9 +5,13 @@ format: pdf
 editor: visual
 ---
 
-## Quarto
+## Abstract
 
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+## Introduction
+
+## Methods
+
+## Results
 
 ::: {.center}
 ![](docs/table1.png){width=4in}
@@ -27,5 +31,9 @@ Quarto enables you to weave together content and executable code into a finished
 *Figure 2*: Estimated difference in treatment effect between full length follow-up period and a series of shortened follow-up periods, across CGM metric endpoints. 95% confidence intervals containing the red dashed line indicated a lack of significant difference. Estimates derived from linear mixed effects model.
 
 :::
+
+## Discussion
+
+## Appendix
 
 
