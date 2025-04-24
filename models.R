@@ -55,7 +55,7 @@ full_model = function(data, metric){
   # Initialize second formula for reduced model
   formula2 = paste0(metric, " - ", metric, "_baseline",
                     " ~ trt + ", paste0(metric, "_baseline"),
-                    "+ AgeAtEnrollment + InsModPump + CGMUseStat + (1|site) + (1|id)")
+                    "+ AgeAtEnrollment + window + InsModPump + CGMUseStat + (1|site) + (1|id)")
   # Create reduced model for later anova testing
   model2 = lmer(as.formula(formula2), data = full_model_data)
   return(list(model, model2))
@@ -66,7 +66,7 @@ full_model = function(data, metric){
     model = lmer(as.formula(formula), data = full_model_data)
     formula2 = paste0("log(1 + ", metric, ") - ",  paste0("log(1 + ", metric, "_baseline)"),
                       " ~ trt + ", paste0("log(1 + ", metric, "_baseline)"),
-                      "+ AgeAtEnrollment + InsModPump + CGMUseStat + (1|site) + (1|id)")
+                      "+ AgeAtEnrollment + window + InsModPump + CGMUseStat + (1|site) + (1|id)")
     model2 = lmer(as.formula(formula2), data = full_model_data)
     return(list(model, model2))
   }
@@ -166,7 +166,5 @@ for(metric in colnames(metrics)[3:6]){
 tab_df(anova_results, file = "output/anova_results_summary.html", digits = 6)
 
 write_csv(interaction_results, "output/interaction_estimates.csv")
-
-
 
 
