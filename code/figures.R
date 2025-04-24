@@ -53,6 +53,6 @@ interaction_effect = interaction_estimates %>%
 
 
 # Save out figures
-ggsave("docs/Figure_1.jpeg", values_over_time, width = 15, height = 8, dpi = 1200)
-ggsave("docs/Figure_2.jpeg", interaction_effect, width = 15, height = 8, dpi = 1200)
+ggsave("docs/Figure_1.png", values_over_time, width = 6, height = 4, dpi = 300)
+ggsave("docs/Figure_2.png", interaction_effect, width = 6, height = 4, dpi = 300)
 

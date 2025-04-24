@@ -15,10 +15,10 @@ library(kableExtra)
 ## Read in data
 ```{r}
 # read in the data/DiabScreening_a.txt file, which uses pipe delimiters
-data <- read.table("data/DiabScreening_a.txt", sep = "|", header = TRUE, fill = TRUE, fileEncoding = "UTF-16LE", stringsAsFactors = FALSE, na.strings = "")
+data <- read.table("data/DCLP3 Public Dataset - Release 3 - 2022-08-04/Data Files/DiabScreening_a.txt", sep = "|", header = TRUE, fill = TRUE, fileEncoding = "UTF-16LE", stringsAsFactors = FALSE, na.strings = "")
 
 # Read the data from the pipe-delimited text file
-ses_data <- read.table("data/DiabSocioEcon_a.txt", sep = "|", header = TRUE, fill = TRUE, fileEncoding = "UTF-16LE", stringsAsFactors = FALSE, na.strings = "")
+ses_data <- read.table("data/DCLP3 Public Dataset - Release 3 - 2022-08-04/Data Files/DiabSocioEcon_a.txt", sep = "|", header = TRUE, fill = TRUE, fileEncoding = "UTF-16LE", stringsAsFactors = FALSE, na.strings = "")
 ses_data <- ses_data %>%
   # Trim whitespace in character variables
   mutate(across(where(is.character), ~str_trim(.))) %>%
@@ -32,7 +32,7 @@ ses_data <- ses_data %>%
   mutate(across(starts_with("Ins"), ~ if_else(is.na(.), 0, as.numeric(.))))
   
 
-physical_data <- read.table("data/DiabPhysExam_a.txt", sep = "|", header = TRUE, fill = TRUE, fileEncoding = "UTF-16LE", stringsAsFactors = FALSE, na.strings = "")
+physical_data <- read.table("data/DCLP3 Public Dataset - Release 3 - 2022-08-04/Data Files/DiabPhysExam_a.txt", sep = "|", header = TRUE, fill = TRUE, fileEncoding = "UTF-16LE", stringsAsFactors = FALSE, na.strings = "")
 
 # mutate BMI using weight (lbs) and height (cm) in physical data
 physical_data <- physical_data %>%
@@ -137,7 +137,7 @@ ggplot(race_proportions, aes(x = reorder(Race, -Proportion), y = Proportion)) +
 # report table 1
 library(table1)
 
-trt <- read.delim("data/PtRoster_a.txt", sep = "|", header = TRUE,
+trt <- read.delim("data/DCLP3 Public Dataset - Release 3 - 2022-08-04/Data Files/PtRoster_a.txt", sep = "|", header = TRUE,
                   stringsAsFactors = FALSE, fileEncoding = "UTF-16LE", na.strings = "")
 
 
@@ -155,12 +155,11 @@ table_data <- data |> mutate(Race = case_when(
   left_join(trt |> select(PtID, trtGroup), by = "PtID") |> 
   filter(!PtID %in% c(84, 33))
 
-table1::table1(~ Age + `Age Group` + BMI +
+demo_table <- table1::table1(~ Age + `Age Group` + BMI +
                  Gender + Race + Ethnicity + 
                  `Previous CGM Use` + 
                  `Administration Type` | trtGroup,
                data = table_data,
                render.continuous = c("Mean (sd)"))
-
 ```
 

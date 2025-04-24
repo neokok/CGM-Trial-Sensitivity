@@ -1,0 +1,31 @@
+---
+title: "620 Final Report: Assessing the Impact of Shortened Follow-up time in Continuous Glucose Monitor Clinical Trials"
+author: "Walter Williamson, Neo Kok, Will Tackett"
+format: pdf
+editor: visual
+---
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+::: {.center}
+![](docs/table1.png){width=4in}
+
+
+*Table 1*: Demographic characteristics of trial participants, stratified by treatment group, where SAP represents the sensor augmented pump control group, and CLC represents the closed loop system treatment group. Administration type represents the personal treatment method preceding the study.
+:::
+
+::: {.right}
+![](docs/Figure_1.png){width=6in}
+
+*Figure 1*: Metric distribution at baseline and with various intervention follow-up windows. Distributions of treatment and control group metrics are represented by purple and blue boxplots, respectively. Window length is in days.
+:::
+
+:::{.center}
+![](docs/Figure_2.png){width=6in}
+*Figure 2*: Estimated difference in treatment effect between full length follow-up period and a series of shortened follow-up periods, across CGM metric endpoints. 95% confidence intervals containing the red dashed line indicated a lack of significant difference. Estimates derived from linear mixed effects model.
+
+:::
+
+
