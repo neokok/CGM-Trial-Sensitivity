@@ -1,7 +1,7 @@
-# Assessing the Impact of Shortened Follow-up Time in Continuous Glucose Monitor (CGM) Clinical Trials
+# Assessing the Impact of Shortened Follow-up Time in Continuous Glucose Monitor Clinical Trials
 
 This repository hosts the complete, reproducible workflow for the manuscript\
-**“Assessing the Impact of Shortened Follow-up Time in Continuous Glucose Monitor (CGM) Clinical Trials”**\
+**“Assessing the Impact of Shortened Follow-up Time in Continuous Glucose Monitor Clinical Trials”**\
 by Neo Kok, Walter Williamson, and Will Tackett.
 
 ------------------------------------------------------------------------
