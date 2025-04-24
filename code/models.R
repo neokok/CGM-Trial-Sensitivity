@@ -79,7 +79,8 @@ full_model = function(data, metric){
 # Initialize ANOVA dataframe
 anova_results = data.frame(
   Metric = character(),
-  F_value = numeric(),
+  Chisq_value = numeric(),
+  df = numeric(),
   p_value = numeric(),
   stringsAsFactors = FALSE
 )
@@ -155,7 +156,8 @@ for(metric in colnames(metrics)[3:6]){
   anova_results = rbind(anova_results,
                          data.frame(
                            Metric = metric,
-                           F_value = comparison$statistic,
+                           Chisq_value = comparison$statistic,
+                           df = comparison$df,
                            p_value = comparison$p.value,
                            stringsAsFactors = FALSE
                          ))
